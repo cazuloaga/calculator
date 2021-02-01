@@ -144,28 +144,53 @@
 
         // All operators functions.
 
-        function sum(x,y){
-            return x+y;
+        function sum(){
+            total=parseFloat(firstValue)+parseFloat(secondValue);
         }
 
-        function substract(x,y){
-            return x-y;
+        function substract(){
+            total=parseFloat(firstValue)-parseFloat(secondValue);
         }
 
-        function multiply(x,y){
-            return x*y;
+        function multiply(){
+            total=parseFloat(firstValue)*parseFloat(secondValue);
         }
 
-        function divide(x,y){
-            return x/y
-        }
-
-        function backSpace(){
-
+        function divide(){
+            total=parseFloat(firstValue)/parseFloat(secondValue);
         }
 
         function clear(){
+            secondValue='';
+            textValue='';
+            calcScreen.textContent=0
 
+        }
+
+        function clearAll(){
+            secondValue='';
+            textValue='';
+            total=0;
+            firstValue='';
+            calcScreen.textContent=0
+        }
+
+        //Functions for checking and writing total
+
+        function checkTotal(){
+            if (total.toString().length>9 && total<999999999){
+                total=parseFloat(total.toString().slice(0,9));
+                } else if(total>999999999){
+                    total=total.toExponential(3)
+                }
+
+        }
+
+        function writeTotal(){
+            firstValue=total.toString();
+            secondValue='';
+            textValue='';
+            calcScreen.textContent=total
         }
 
         //Event listeners for numbers
@@ -213,107 +238,50 @@
                     if(firstValue!='' && secondValue!=''){
                         switch (nextOperation){
                             case 'sum':
-                                total=parseFloat(firstValue)+parseFloat(secondValue);
-                                if (total.toString().length>9 && total<999999999){
-                                    total=parseFloat(total.toString().slice(0,9));
-                                } else if(total>999999999){
-                                    total=total.toExponential(3)
-                                }
-                                firstValue=total.toString();
-                                secondValue='';
-                                textValue='';
+                                sum();
                                 nextOperation=operator.id;
                                 break;
                             case 'substract':
-                                total=parseFloat(firstValue)-parseFloat(secondValue);
-                                if (total.toString().length>9 && total<999999999){
-                                    total=parseFloat(total.toString().slice(0,9));
-                                } else if(total>999999999){
-                                    total=total.toExponential(3)
-                                }
-                                firstValue=total.toString();
-                                secondValue='';
-                                textValue='';
+                                substract();
                                 nextOperation=operator.id;
                                 break;
                             case 'multiply':
-                                total=parseFloat(firstValue)*parseFloat(secondValue);
-                                if (total.toString().length>9 && total<999999999){
-                                    total=parseFloat(total.toString().slice(0,9));
-                                } else if(total>999999999){
-                                    total=total.toExponential(3)
-                                }
-                                firstValue=total.toString();
-                                secondValue='';
-                                textValue='';
+                                multiply();
                                 nextOperation=operator.id;
                                 break;
                             case 'divide':
-                                total=parseFloat(firstValue)/parseFloat(secondValue);
-                                if (total.toString().length>9 && total<999999999){
-                                    total=parseFloat(total.toString().slice(0,9));
-                                } else if(total>999999999){
-                                    total=total.toExponential(3)
-                                }
-                                firstValue=total.toString();
-                                secondValue='';
-                                textValue='';
+                                divide();
                                 nextOperation=operator.id;
                                 break;
                         }
                     }
-                    calcScreen.textContent=total
+
+                    checkTotal();
+                    writeTotal();
                     
                 } else if(operator.id=='equal'){
                     switch (nextOperation){
                             case 'sum':
-                                total=parseFloat(firstValue)+parseFloat(secondValue);
-                                if (total.toString().length>9 && total<999999999){
-                                    total=parseFloat(total.toString().slice(0,9));
-                                } else if(total>999999999){
-                                    total=total.toExponential(3)
-                                }
+                                sum();
                                 break;
                             case 'substract':
-                                total=parseFloat(firstValue)-parseFloat(secondValue);
-                                if (total.toString().length>9 && total<999999999){
-                                    total=parseFloat(total.toString().slice(0,9));
-                                } else if(total>999999999){
-                                    total=total.toExponential(3)
-                                }
+                                substract();
                                 break;
                             case 'multiply':
-                                total=parseFloat(firstValue)*parseFloat(secondValue);
-                                if (total.toString().length>9 && total<999999999){
-                                    total=parseFloat(total.toString().slice(0,9));
-                                } else if(total>999999999){
-                                    total=total.toExponential(3)
-                                }
+                                multiply()
                                 break;
                             case 'divide':
-                                total=parseFloat(firstValue)/parseFloat(secondValue);
-                                if (total.toString().length>9 && total<999999999){
-                                    total=parseFloat(total.toString().slice(0,9));
-                                } else if(total>999999999){
-                                    total=total.toExponential(3)
-                                }
+                                divide();
                                 break;
                     }
-                    calcScreen.textContent=total
-                    firstValue='';
-                    secondValue='';
+                    checkTotal();
+                    writeTotal();
                     textValue='';
                 } else if(operator.id=='clear'){
-                    secondValue='';
-                    textValue='';
-                    calcScreen.textContent=0
+                    clear();
 
                 } else if(operator.id=='clearAll'){
-                    secondValue='';
-                    textValue='';
-                    total=0;
-                    firstValue='';
-                    calcScreen.textContent=0
+                    clearAll();
 
                 }
             });
