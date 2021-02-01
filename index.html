@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name="calculator" content="width=device-width">
+    <title>Calculator</title>
+    <style>
+        .calc{
+            display: flex;
+            min-height: 95vh;
+            justify-content: center;
+            align-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container{
+            background-color: black;
+            border: 10px solid black;
+            border-radius: 4px;
+            display: grid;
+            grid-template-columns: repeat(4,100px);
+            grid-template-rows: minmax(100px, auto) repeat(5,80px);
+            grid-template-areas:
+            'sc sc sc sc'
+            'num num num ops'
+            'num num num ops'
+            'num num num ops'
+            'num num num ops'
+            'num num num ops';
+            gap: 2px;
+            
+            
+
+            
+        }
+        .screen{
+            display: flex;
+            flex-direction: column;
+            background-color: #b2b9b7;            
+            grid-area: sc;           
+            background: rgb(208, 241, 203);
+            justify-content: space-around;
+            align-items: flex-end;
+            padding: 5px;
+            font-size: 5.3em;
+            font-weight: initial;
+            text-shadow: 1.3px 1.3px #383838;
+            margin: 5px;
+            
+        }
+        button {
+            margin: 1px;
+            border-radius: 5%;
+            border: none;
+            font-weight: initial;
+            font-size: 2em;
+            font-family: monospace;
+            color: black;
+            height: 100%;
+            width: 100%;
+        }
+
+        .numbers{
+            display: grid;
+            height: 100%;
+            width: 95%;
+            grid-area:num;
+            grid-template-columns: repeat(3,1fr);
+            grid-template-rows: repeat(4,1fr);
+            grid-gap: 10px;
+            align-self: center;
+            justify-self: center;
+        }
+
+        .operators{
+            display: grid;
+            height: 100%;
+            width: 100%;
+            grid-area: ops;
+            grid-template-rows:repeat(7,1fr);
+            align-self: center;
+            justify-self: center;
+            grid-gap: 10px;
+            align-self: center;
+            justify-self: center;
+        }
+
+        .itemDeci{
+            grid-area:4/2/5/4;
+        }
+    </style>
+
+    </head>
+    <body>
+        <main id='calc' class='calc'>
+            <div class='container' id='container'>
+                <div id='screen' class='screen'>0</div>
+                <div class='numbers' id='numbers'>
+                    <button id='7' class='buttons'>7</button>
+                    <button id='8' class='buttons'>8</button>
+                    <button id='9' class='buttons'>9</button>
+                    <button id='4' class='buttons'>4</button>
+                    <button id='5' class='buttons'>5</button>
+                    <button id='6' class='buttons'>6</button>
+                    <button id='1' class='buttons'>1</button>
+                    <button id='2' class='buttons'>2</button>
+                    <button id='3' class='buttons'>3</button>
+                    <button id='0' class='buttons'>0</button>
+                    <button id='.' class='itemDeci'>.</button>
+                </div>
+                <div id='operators' class='operators'>
+                    <button id='clear' class='buttons'>C</button>
+                    <button id='clearAll' class='buttons'>CA</button>
+                    <button id='sum' class='buttons'>+</button>
+                    <button id='substract' class='buttons'>-</button>
+                    <button id='multiply' class='buttons'>*</button>
+                    <button id='divide' class='buttons'>/</button>                
+                    <button id='equal' class='buttons'>=</button>
+                    
+                </div>
+            </div>
+        </main>
+    </body>
+    <script>
+        // Variables
+        let textValue='';
+        let operators='';
+        let firstValue='';
+        let secondValue='';
+        let nextValue=0;
+        let total=0;
+        let nextOperation='';
+        let comma=false;
+        let expo='';
+        let indexExpo='';
+
+        // All operators functions.
+
+        function sum(x,y){
+            return x+y;
+        }
+
+        function substract(x,y){
+            return x-y;
+        }
+
+        function multiply(x,y){
+            return x*y;
+        }
+
+        function divide(x,y){
+            return x/y
+        }
+
+        function backSpace(){
+
+        }
+
+        function clear(){
+
+        }
+
+        //Event listeners for numbers
+        const calcScreen=document.querySelector('#screen');
+        const numberList=document.querySelector('#numbers');
+        const numbers=numberList.querySelectorAll('button');
+        numbers.forEach((number)=>{
+            number.addEventListener('click',()=>{
+                if(number.id=='.' && comma==false){
+                        textValue=textValue+number.id;
+                        calcScreen.textContent=textValue;
+                        if(textValue>9){
+                            calcScreen.textContent=textValue.substring(0,9)
+                        }
+                        nextValue=textValue;
+                        comma=true;
+                } else if(number.id!='.'){
+                    textValue=textValue+number.id;
+                    calcScreen.textContent=textValue;
+                    if(textValue>9){
+                            calcScreen.textContent=textValue.substring(0,9)
+                    }
+                    nextValue=textValue;
+                }
+                
+            });
+        });
+
+        //Event listeners for operators
+        const check=total.toString()
+        const operatorList=document.querySelector('#operators');
+        operators=operatorList.querySelectorAll('button');
+        operators.forEach((operator)=>{            
+            operator.addEventListener('click',()=>{
+                comma=false;
+                    if(firstValue==''){
+                        firstValue=calcScreen.textContent;
+                        nextOperation=operator.id;
+                        total=parseFloat(firstValue);
+                        textValue='';
+                    } else if(firstValue!='' && textValue!=''){
+                        secondValue=nextValue;
+                    } 
+                    if(operator.id!='equal' && operator.id!='clear' && operator.id!='clearAll'){
+                    if(firstValue!='' && secondValue!=''){
+                        switch (nextOperation){
+                            case 'sum':
+                                total=parseFloat(firstValue)+parseFloat(secondValue);
+                                if (total.toString().length>9 && total<999999999){
+                                    total=parseFloat(total.toString().slice(0,9));
+                                } else if(total>999999999){
+                                    total=total.toExponential(3)
+                                }
+                                firstValue=total.toString();
+                                secondValue='';
+                                textValue='';
+                                nextOperation=operator.id;
+                                break;
+                            case 'substract':
+                                total=parseFloat(firstValue)-parseFloat(secondValue);
+                                if (total.toString().length>9 && total<999999999){
+                                    total=parseFloat(total.toString().slice(0,9));
+                                } else if(total>999999999){
+                                    total=total.toExponential(3)
+                                }
+                                firstValue=total.toString();
+                                secondValue='';
+                                textValue='';
+                                nextOperation=operator.id;
+                                break;
+                            case 'multiply':
+                                total=parseFloat(firstValue)*parseFloat(secondValue);
+                                if (total.toString().length>9 && total<999999999){
+                                    total=parseFloat(total.toString().slice(0,9));
+                                } else if(total>999999999){
+                                    total=total.toExponential(3)
+                                }
+                                firstValue=total.toString();
+                                secondValue='';
+                                textValue='';
+                                nextOperation=operator.id;
+                                break;
+                            case 'divide':
+                                total=parseFloat(firstValue)/parseFloat(secondValue);
+                                if (total.toString().length>9 && total<999999999){
+                                    total=parseFloat(total.toString().slice(0,9));
+                                } else if(total>999999999){
+                                    total=total.toExponential(3)
+                                }
+                                firstValue=total.toString();
+                                secondValue='';
+                                textValue='';
+                                nextOperation=operator.id;
+                                break;
+                        }
+                    }
+                    calcScreen.textContent=total
+                    
+                } else if(operator.id=='equal'){
+                    switch (nextOperation){
+                            case 'sum':
+                                total=parseFloat(firstValue)+parseFloat(secondValue);
+                                if (total.toString().length>9 && total<999999999){
+                                    total=parseFloat(total.toString().slice(0,9));
+                                } else if(total>999999999){
+                                    total=total.toExponential(3)
+                                }
+                                break;
+                            case 'substract':
+                                total=parseFloat(firstValue)-parseFloat(secondValue);
+                                if (total.toString().length>9 && total<999999999){
+                                    total=parseFloat(total.toString().slice(0,9));
+                                } else if(total>999999999){
+                                    total=total.toExponential(3)
+                                }
+                                break;
+                            case 'multiply':
+                                total=parseFloat(firstValue)*parseFloat(secondValue);
+                                if (total.toString().length>9 && total<999999999){
+                                    total=parseFloat(total.toString().slice(0,9));
+                                } else if(total>999999999){
+                                    total=total.toExponential(3)
+                                }
+                                break;
+                            case 'divide':
+                                total=parseFloat(firstValue)/parseFloat(secondValue);
+                                if (total.toString().length>9 && total<999999999){
+                                    total=parseFloat(total.toString().slice(0,9));
+                                } else if(total>999999999){
+                                    total=total.toExponential(3)
+                                }
+                                break;
+                    }
+                    calcScreen.textContent=total
+                    firstValue='';
+                    secondValue='';
+                    textValue='';
+                } else if(operator.id=='clear'){
+                    secondValue='';
+                    textValue='';
+                    calcScreen.textContent=0
+
+                } else if(operator.id=='clearAll'){
+                    secondValue='';
+                    textValue='';
+                    total=0;
+                    firstValue='';
+                    calcScreen.textContent=0
+
+                }
+            });
+                          
+        });
+
+
+        
+
+        
+
+
+
+    </script>
+  
+</html>
