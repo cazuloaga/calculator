@@ -67,8 +67,8 @@
 
         .numbers{
             display: grid;
-            height: 100%;
-            width: 95%;
+            height: 98%;
+            width: 98%;
             grid-area:num;
             grid-template-columns: repeat(3,1fr);
             grid-template-rows: repeat(4,1fr);
@@ -81,8 +81,8 @@
 
         .operators{
             display: grid;
-            height: 100%;
-            width: 100%;
+            height: 98%;
+            width: 90%;
             grid-area: ops;
             grid-template-rows:repeat(7,1fr);
             align-self: center;
@@ -95,6 +95,17 @@
 
         .itemDeci{
             grid-area:4/2/5/4;
+        }
+
+        .btnClear{
+            background: rgb(247, 30, 30);
+        }
+        .btnClearAll{
+            background: rgb(189, 18, 27);
+        }
+
+        .btnEqual{
+            background:green;
         }
     </style>
 
@@ -117,29 +128,30 @@
                     <button id='.' class='itemDeci'>.</button>
                 </div>
                 <div id='operators' class='operators'>
-                    <button id='clear' class='buttons'>C</button>
-                    <button id='clearAll' class='buttons'>CA</button>
+                    <button id='clear' class='btnClear'>C</button>
+                    <button id='clearAll' class='btnClearAll'>CA</button>
                     <button id='sum' class='buttons'>+</button>
                     <button id='substract' class='buttons'>-</button>
                     <button id='multiply' class='buttons'>*</button>
                     <button id='divide' class='buttons'>/</button>                
-                    <button id='equal' class='buttons'>=</button>
+                    <button id='equal' class='btnEqual'>=</button>
                     
                 </div>
             </div>
         </main>
     </body>
     <script>
-        // Variables initial values        
+        // Variables
         let textValue='';
+        let operators='';
         let firstValue='';
         let secondValue='';
+        let nextValue=0;
         let total=0;
         let nextOperation='';
-        let lastOperation='';
-        let comma=false;      
-
-        
+        let comma=false;
+        let expo='';
+        let indexExpo='';
 
         // All operators functions.
 
@@ -174,17 +186,7 @@
             calcScreen.textContent=0
         }
 
-        //Functions for values and totals
-
-        function createValue() {
-            if (firstValue==''){
-                firstValue=calcScreen.textContent; 
-                total=parseFloat(firstValue);                             
-            } else{
-                secondValue=calcScreen;                
-            }        
-            textValue='';
-        }
+        //Functions for checking and writing total
 
         function checkTotal(){
             if (total.toString().length>9 && total<999999999){
@@ -196,41 +198,12 @@
         }
 
         function writeTotal(){
-            calcScreen.textContent=total;
             firstValue=total.toString();
             secondValue='';
             textValue='';
+            calcScreen.textContent=total
         }
 
-        function operation(){
-                if(nextOperation!='clear' && nextOperation!='clearAll'){
-                switch (nextOperation){
-                    case 'sum':
-                        sum();
-                        break;
-                    case 'substract':
-                        substract();
-                        break;
-                    case 'multiply':
-                        multiply();
-                        break;
-                    case 'divide':
-                        divide();
-                        break;
-                    case 'equal':
-                        total=total;
-                        break;
-                }
-            }
-        }
-
-        function checkValues(){
-            if (firstValue!='' && secondValue==''){
-                nextOperation=operatorChosen;
-            } else if(firstValue!='' && secondValue!=''){
-                operation();
-            }
-        }
         //Event listeners for numbers
         const calcScreen=document.querySelector('#screen');
         const numberList=document.querySelector('#numbers');
@@ -243,6 +216,7 @@
                         if(textValue>9){
                             calcScreen.textContent=textValue.substring(0,9)
                         }
+                        nextValue=textValue;
                         comma=true;
                 } else if(number.id!='.'){
                     textValue=textValue+number.id;
@@ -250,43 +224,58 @@
                     if(textValue>9){
                             calcScreen.textContent=textValue.substring(0,9)
                     }
+                    nextValue=textValue;
                 }
                 
             });
         });
 
         //Event listeners for operators
+        const check=total.toString()
         const operatorList=document.querySelector('#operators');
-        let operators=operatorList.querySelectorAll('button');
-        operators.forEach((operator)=>{       
+        operators=operatorList.querySelectorAll('button');
+        operators.forEach((operator)=>{            
             operator.addEventListener('click',()=>{
                 comma=false;
-                let operatorChosen=operator.id;
-                if (operator.id!='clear' && operator.id!='clearAll'){
-                    if (firstValue==''){
-                        firstValue=calcScreen.textContent; 
-                        total=parseFloat(firstValue);                             
-                    } else if(textValue!=''){
-                        secondValue=calcScreen.textContent;                
-                    }        
-                textValue='';
-                if (firstValue!='' && secondValue==''){
-                    nextOperation=operator.id;
-                } else if(firstValue!='' && secondValue!=''){
-                    operation();
-                }
-                checkTotal();
-                writeTotal();
-                if (operator.id=='equal'){
-                    firstValue=''
-                }
-                } else if (operator.id='clear'){
+                    if(firstValue==''){
+                        firstValue=calcScreen.textContent;
+                        total=parseFloat(firstValue);
+                        textValue='';
+                    } else if(firstValue!='' && textValue!=''){
+                        secondValue=nextValue;
+                        nextOperation=operator.id;
+                    }
+                    if(operator.id!='clear' && operator.id!='clearAll'){
+                    if(firstValue!='' && secondValue!=''){
+                        switch (nextOperation){
+                            case 'sum':
+                                sum();
+                                break;
+                            case 'substract':
+                                substract();
+                                break;
+                            case 'multiply':
+                                multiply();
+                                break;
+                            case 'divide':
+                                divide();
+                                break;
+                            case 'equal':
+                                break;
+                        }
+                    }
+
+                    checkTotal();
+                    writeTotal();
+                } else if(operator.id=='clear'){
                     clear();
-                } else if(operator.id='clearAll'){
+
+                } else if(operator.id=='clearAll'){
                     clearAll();
+
                 }
-            });                 
-                
+            });
+                          
         });
 
 
