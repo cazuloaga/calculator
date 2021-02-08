@@ -217,20 +217,15 @@
                 if(nextOperation!='clear' && nextOperation!='clearAll'){
                 switch (nextOperation){
                     case 'sum':
-                        sum();
-                        break;
+                        return sum();
                     case 'substract':
-                        substract();
-                        break;
+                        return substract();
                     case 'multiply':
-                        multiply();
-                        break;
+                        return multiply();
                     case 'divide':
-                        divide();
-                        break;
+                        return divide();
                     case 'equal':
-                        total=total;
-                        break;
+                        return total=total;
                 }
             }
         }
@@ -276,16 +271,14 @@
                 if (operator.id!='clear' && operator.id!='clearAll'){
                     if (firstValue==''){
                         firstValue=calcScreen.textContent; 
-                        total=parseFloat(firstValue);                             
+                        total=parseFloat(firstValue);
+                        nextOperation=operator.id;                            
                     } else if(textValue!=''){
-                        secondValue=calcScreen.textContent;                
+                        secondValue=calcScreen.textContent;
+                        operation();
+                        nextOperation=operator.id;                
                     }        
                 textValue='';
-                if (firstValue!='' && secondValue==''){
-                    nextOperation=operator.id;
-                } else if(firstValue!='' && secondValue!=''){
-                    operation();
-                }
                 checkTotal();
                 writeTotal();
                 if (operator.id=='equal'){
